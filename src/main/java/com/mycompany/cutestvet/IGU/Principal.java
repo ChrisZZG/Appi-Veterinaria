@@ -65,6 +65,11 @@ public class Principal extends javax.swing.JFrame {
         btnExitApp.setFont(new java.awt.Font("Impact", 0, 24)); // NOI18N
         btnExitApp.setForeground(new java.awt.Color(255, 255, 255));
         btnExitApp.setText("EXIT APP");
+        btnExitApp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExitAppActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -152,6 +157,11 @@ public class Principal extends javax.swing.JFrame {
         viewClients.setVisible(true);
         viewClients.setLocationRelativeTo(null);
     }//GEN-LAST:event_btnViewClientActionPerformed
+
+    private void btnExitAppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitAppActionPerformed
+        // CERRAR ESTA VENTANA
+        this.dispose();
+    }//GEN-LAST:event_btnExitAppActionPerformed
 
    
     // Variables declaration - do not modify//GEN-BEGIN:variables

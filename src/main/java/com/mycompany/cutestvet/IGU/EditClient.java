@@ -5,6 +5,7 @@
 package com.mycompany.cutestvet.IGU;
 
 import com.mycompany.cutestvet.Logica.Controladora;
+import com.mycompany.cutestvet.Logica.Dog;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
@@ -12,15 +13,25 @@ import javax.swing.JOptionPane;
  *
  * @author crist
  */
-public class LoadClient extends javax.swing.JFrame {
+public class EditClient extends javax.swing.JFrame {
 
     //INSTANCIA GLOBAL CONTROLADORA
     Controladora control = null;
-    public LoadClient() {
+    //VARIABLE GLOBAL DEL VALOR PASADO COMO ID CLIENTE AL LLAMAR LA
+    //INSTANCIA DE ESTA VENTANA DESDE LA VENTANA VER CLIENTE
+    int IdCliente;
+    //VARIABLE GLOBAL DE MASCOTA DONDE VAMOS A GUARDAR LA MASCOTA QUE VAMOS
+    //A TRAER PARA EDITAR Y LUEGO LO VAMOS A GUARDAR
+    Dog dog;
+    public EditClient(int idCliente) {
         
         control = new Controladora();
         
         initComponents();
+        
+        //BUSCAR EN LA BASE DE DATOS LA MASCOTA A PARTIR DEL ID Y 
+        //TRAERLA PARA MODIFICARLA
+        uploadClientDate(idCliente);
     }
 
     /**
@@ -59,7 +70,7 @@ public class LoadClient extends javax.swing.JFrame {
         txtAddressOwner = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         btnCleanForm = new javax.swing.JButton();
-        btnSaveForm = new javax.swing.JButton();
+        btnSaveChanges = new javax.swing.JButton();
         btnReturn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -67,7 +78,7 @@ public class LoadClient extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Impact", 0, 36)); // NOI18N
-        jLabel1.setText("FORM LOAD CLIENTS");
+        jLabel1.setText("FORM EDIT CLIENTS");
 
         jButton1.setIcon(new javax.swing.ImageIcon("C:\\Users\\crist\\OneDrive\\Escritorio\\Veterinaria\\icon.png")); // NOI18N
 
@@ -113,13 +124,13 @@ public class LoadClient extends javax.swing.JFrame {
             }
         });
 
-        btnSaveForm.setBackground(new java.awt.Color(71, 194, 221));
-        btnSaveForm.setFont(new java.awt.Font("Impact", 0, 24)); // NOI18N
-        btnSaveForm.setForeground(new java.awt.Color(255, 255, 255));
-        btnSaveForm.setText("SAVE FORM");
-        btnSaveForm.addActionListener(new java.awt.event.ActionListener() {
+        btnSaveChanges.setBackground(new java.awt.Color(71, 194, 221));
+        btnSaveChanges.setFont(new java.awt.Font("Impact", 0, 24)); // NOI18N
+        btnSaveChanges.setForeground(new java.awt.Color(255, 255, 255));
+        btnSaveChanges.setText("SAVE CHANGE");
+        btnSaveChanges.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveFormActionPerformed(evt);
+                btnSaveChangesActionPerformed(evt);
             }
         });
 
@@ -130,7 +141,7 @@ public class LoadClient extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(65, 65, 65)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSaveForm, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSaveChanges, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCleanForm, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(70, Short.MAX_VALUE))
         );
@@ -140,7 +151,7 @@ public class LoadClient extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addComponent(btnCleanForm, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnSaveForm, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSaveChanges, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -328,32 +339,52 @@ public class LoadClient extends javax.swing.JFrame {
         cmbEspecAtenDog.setSelectedIndex(0);
     }//GEN-LAST:event_btnCleanFormActionPerformed
 
-    private void btnSaveFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveFormActionPerformed
+    private void btnSaveChangesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveChangesActionPerformed
         //ASIGNAR LAS ENTRADAS DE LOS IMPUTS A VARIABLES AUXILIARES
-        String addresOwner = txtAddressOwner.getText();
+        //DATOS DE DOG
+        
         String breedDog = txtBreedDog.getText();
         String colorDog = txtColorDog.getText();
-        String nameDog = txtNameDog.getText();
-        String nameOwner = txtNameOwner.getText();
+        String nameDog = txtNameDog.getText();       
         String notesDog = txtNotesDog.getText();
-        String phoneOwner = txtPhoneOwner.getText();
         String allergiesDog = (String) cmbAllergiesDog.getSelectedItem();
         String especAtenDog = (String) cmbEspecAtenDog.getSelectedItem();
+        //DATOS DE OWNER
+        String addresOwner = txtAddressOwner.getText();
+        String nameOwner = txtNameOwner.getText();
+        String phoneOwner = txtPhoneOwner.getText();
         
-        //LLAMAR AL METODO GUARDAR DE LA CONTROLADORA Y PASARLE COMO PARAMETROS
-        //TODAS LAS VARIABLES AUXILIARES
-        control.guardar(addresOwner, breedDog, colorDog, nameDog,
+        /* METODO PARA MODIFICAR LA MASCOTA
+        LE PASAMOS AL METODO ADEMAS DE TODOS LOS PARAMETROS LA "MASCOTA", 
+        ALMACENADA COMO VARIABLE GLOBAL QUE FUE SETEADA CUANDO CARGAMOS LA 
+        MASCOTA POR ID, TAMBIEN ASI OBTENGO EL ID DEL DUEÑO RELACIONADO
+        QUE NECESITO MODIFICAR
+        */
+        control.modifyDog(dog, addresOwner, breedDog, colorDog, nameDog,
                 nameOwner, notesDog, phoneOwner, allergiesDog, especAtenDog);
         
         //CREAMOS UN CARTEL DE NOTIFICACION PARA QUE CUANDO LE DEMOS AL BOTON
         //GUARDAR, NOS DIGA QUE SE GUARDO CORRECTAMENTE EN LA BASE DE DATOS
-        JOptionPane optionPane = new JOptionPane("Success Save");
+        JOptionPane optionPane = new JOptionPane("Modify Success");
         optionPane.setMessageType(JOptionPane.INFORMATION_MESSAGE);
-        JDialog dialog = optionPane.createDialog("Save Success 200 OK");
+        JDialog dialog = optionPane.createDialog("Modify Success 200 OK");
         dialog.setAlwaysOnTop(true);
         dialog.setVisible(true);
         
-    }//GEN-LAST:event_btnSaveFormActionPerformed
+        /*UNA VEZ QUE TERMINO DE EDITAR, TENGO QUE CERRAR LA VENTANA Y RECARGAR
+        EL LISTADO DE CLIENTES MOSTRADAS CON LOS CAMBIOS REALIZADOS, CERRAR
+        ESTA VENTANA UNA VEZ APLICADO EL METODO
+        */
+        this.dispose();
+        
+        /*UNA VEZ QUE MODIFIQUE Y GUARDE EL CLIENTE EDITADO HAGO QUE
+        SE REABRA LA VENTANA VER CLIENTES CON LOS DATOS ACTUALIZADOS
+        */
+        ViewClients viewClients = new ViewClients();
+        viewClients.setVisible(true);
+        viewClients.setLocationRelativeTo(null);
+        
+    }//GEN-LAST:event_btnSaveChangesActionPerformed
 
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
        
@@ -366,7 +397,7 @@ public class LoadClient extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCleanForm;
     private javax.swing.JButton btnReturn;
-    private javax.swing.JButton btnSaveForm;
+    private javax.swing.JButton btnSaveChanges;
     private javax.swing.JComboBox<String> cmbAllergiesDog;
     private javax.swing.JComboBox<String> cmbEspecAtenDog;
     private javax.swing.JButton jButton1;
@@ -394,4 +425,34 @@ public class LoadClient extends javax.swing.JFrame {
     private javax.swing.JTextArea txtNotesDog;
     private javax.swing.JTextField txtPhoneOwner;
     // End of variables declaration//GEN-END:variables
+
+    private void uploadClientDate(int idCliente) {
+        /*LLAMO A LA CONTROLADORA Y CREO EL METODO TRAER UNA SOLA MASCOTA
+        POR ID, NO OLVIDAR QUE LO QUE TRAIGO LO GUARDO EN LA VARIABLE GLOBAL
+        dog
+        */
+        this.dog = control.findDog(idCliente);
+        //SETEAMOS CADA UNO DE LOS VALORES QUE TENGAMOS EN MASCOTA A LA 
+        //INTERFAZ GRAFICA
+        txtAddressOwner.setText(dog.getOwner().getAddressOwner());
+        txtBreedDog.setText(dog.getBreedDog());
+        txtColorDog.setText(dog.getColorDog());
+        txtNameDog.setText(dog.getNameDog());
+        txtNameOwner.setText(dog.getOwner().getNameOwner());
+        txtNotesDog.setText(dog.getNotesDog());
+        txtPhoneOwner.setText(dog.getOwner().getPhoneOwner());
+        
+        if(dog.getAllergicDog().equalsIgnoreCase("YES")){
+            cmbAllergiesDog.setSelectedIndex(1);
+        }else{
+            cmbAllergiesDog.setSelectedIndex(2);
+        }
+        
+        if(dog.getEspAtDog().equalsIgnoreCase("YES")){
+            cmbEspecAtenDog.setSelectedIndex(1);
+        }else{
+            cmbEspecAtenDog.setSelectedIndex(2);
+        }
+        
+    }
 }

@@ -6,7 +6,10 @@ package com.mycompany.cutestvet.Persistencia;
 
 import com.mycompany.cutestvet.Logica.Dog;
 import com.mycompany.cutestvet.Logica.Owner;
+import com.mycompany.cutestvet.Persistencia.exceptions.NonexistentEntityException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,6 +36,42 @@ public class ControladoraPersistencia {
         //LLAMAMOS A LA INSTANCIA DE DOG PARA QUE INGRESE A LA BASE DE DATOS 
         //Y TRAIGA LOS DATOS DE LOS CLIENTES
         return dogJpa.findDogEntities();
+    }
+
+    public void deleteDog(int idCliente) {
+        try {
+            dogJpa.destroy(idCliente);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControladoraPersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //TRAER MASCOTA PARA EDITAR
+    public Dog findMascota(int idCliente) {
+        return dogJpa.findDog(idCliente);
+    }
+
+    //EDITAR LA MASCOTA EN LA BASE DE DATOS
+    public void modificarMascota(Dog dog) {
+        try {
+            dogJpa.edit(dog);
+        } catch (Exception ex) {
+            Logger.getLogger(ControladoraPersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //TRAER AL DUEÑO DE LA BASE DE DATOS PARA PODER EDITAR
+    public Owner traerDueño(int idOwner) {
+        return ownerJpa.findOwner(idOwner);
+    }
+
+    //EDITAR AL DUEÑO EN LA BASE DE DATOS
+    public void modificarDueño(Owner owner) {
+        try {
+            ownerJpa.edit(owner);
+        } catch (Exception ex) {
+            Logger.getLogger(ControladoraPersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     

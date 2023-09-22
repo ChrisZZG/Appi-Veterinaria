@@ -167,6 +167,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="EXIT APP"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExitAppActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

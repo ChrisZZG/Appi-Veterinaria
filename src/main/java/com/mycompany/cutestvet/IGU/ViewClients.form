@@ -147,7 +147,7 @@
                       <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                       <Component id="btnDeleteClient" min="-2" pref="217" max="-2" attributes="0"/>
                       <EmptySpace pref="57" max="32767" attributes="0"/>
-                      <Component id="jButton2" min="-2" pref="112" max="-2" attributes="0"/>
+                      <Component id="btnReturn" min="-2" pref="112" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                       <Component id="btnEditClient" min="-2" pref="217" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
@@ -161,7 +161,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnDeleteClient" alignment="3" min="-2" pref="56" max="-2" attributes="0"/>
                           <Component id="btnEditClient" alignment="3" min="-2" pref="56" max="-2" attributes="0"/>
-                          <Component id="jButton2" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
+                          <Component id="btnReturn" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="25" max="32767" attributes="0"/>
                   </Group>
@@ -182,6 +182,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="DELETE CLIENT"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteClientActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnEditClient">
               <Properties>
@@ -196,8 +199,11 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="EDIT CLIENT"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditClientActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton2">
+            <Component class="javax.swing.JButton" name="btnReturn">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="5b" green="b9" red="39" type="rgb"/>
@@ -210,6 +216,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="RETURN"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReturnActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

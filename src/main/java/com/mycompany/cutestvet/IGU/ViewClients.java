@@ -7,6 +7,8 @@ package com.mycompany.cutestvet.IGU;
 import com.mycompany.cutestvet.Logica.Controladora;
 import com.mycompany.cutestvet.Logica.Dog;
 import java.util.List;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -41,7 +43,7 @@ public class ViewClients extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         btnDeleteClient = new javax.swing.JButton();
         btnEditClient = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnReturn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -74,16 +76,31 @@ public class ViewClients extends javax.swing.JFrame {
         btnDeleteClient.setFont(new java.awt.Font("Impact", 0, 24)); // NOI18N
         btnDeleteClient.setForeground(new java.awt.Color(255, 255, 255));
         btnDeleteClient.setText("DELETE CLIENT");
+        btnDeleteClient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteClientActionPerformed(evt);
+            }
+        });
 
         btnEditClient.setBackground(new java.awt.Color(71, 194, 221));
         btnEditClient.setFont(new java.awt.Font("Impact", 0, 24)); // NOI18N
         btnEditClient.setForeground(new java.awt.Color(255, 255, 255));
         btnEditClient.setText("EDIT CLIENT");
+        btnEditClient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditClientActionPerformed(evt);
+            }
+        });
 
-        jButton2.setBackground(new java.awt.Color(57, 185, 91));
-        jButton2.setFont(new java.awt.Font("Impact", 0, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("RETURN");
+        btnReturn.setBackground(new java.awt.Color(57, 185, 91));
+        btnReturn.setFont(new java.awt.Font("Impact", 0, 14)); // NOI18N
+        btnReturn.setForeground(new java.awt.Color(255, 255, 255));
+        btnReturn.setText("RETURN");
+        btnReturn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReturnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -93,7 +110,7 @@ public class ViewClients extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(btnDeleteClient, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45)
                 .addComponent(btnEditClient, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(66, 66, 66))
@@ -105,7 +122,7 @@ public class ViewClients extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDeleteClient, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEditClient, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
@@ -174,13 +191,74 @@ public class ViewClients extends javax.swing.JFrame {
         uploadTable();
     }//GEN-LAST:event_formWindowOpened
 
+    private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
+        //CERRAR LA VENTANA Y VOLVER HACIA ATRAS
+        this.dispose();
+    }//GEN-LAST:event_btnReturnActionPerformed
+
+    private void btnDeleteClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteClientActionPerformed
+        
+        /*ELIMINAR UN CLIENTE POR EL ID, SI NO HAY NADA SELECCIONADO 
+O SI LA TABLA ESTA VACIA, QUE NO PUEDA ELIMINARSE NADA
+        SI LA FILA SELECCIONADA NO ESTA VACIA O EL CONTEO ES MAYOR A CERO
+        ES DECIR QUE AL MENOS TIENE QUE HABER UN REGISTRO EN LA BASE DE DATOS*/
+        if(tableContent.getRowCount() > 0){
+            //TAMBIEN TIENE QUE HABER AL MENOS UNO SELECCIONADO ES DECIR DIFERENTE A -1
+            if(tableContent.getSelectedRow() !=-1){
+                /*GUARDO EN UNA VARIABLE AUXILIAR EL IDCLIENTE QUE TENGO EN LA
+                POSICION CERO, RECORDAR QUE EL VALOR ESTA DECLARADO COMO UN OBJETO, 
+                POR LO CUAL SE EXTRAE COMO STRING Y LUEGO SE PARSEA A INTEGER PARA 
+                PODER SER GUARDADO COMO UN ENTERO
+                */
+                int idCliente = Integer.parseInt(String.valueOf(tableContent.getValueAt(tableContent.getSelectedRow(), 0)));
+                
+                //CREAR EL METODO EN LA CONTROLADORA PASANDOLE EL IDCLIENTE A BORRAR
+                control.borrar(idCliente);
+                //NOTIFICACION DE BORRADO EXITOSO
+                notificacion("DELETE CLIENTE SUSSES", "INFO", "200 OK ");
+                //LLAMO AL METODO CARGAR TABLA PARA QUE ACTUALIZE EL CONTENIDO UNA VEZ ELIMINADO EL CLIENTE
+                uploadTable();
+            }else{
+                notificacion("NO SELECT CLIENT", "ERROR", "404 BAD REQUEST");
+            }
+        }else{
+            notificacion("NO EXIST ANY CLIENT", "ERROR", "404 BAD REQUEST");
+        }
+        
+    }//GEN-LAST:event_btnDeleteClientActionPerformed
+
+    private void btnEditClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditClientActionPerformed
+        // EDITAR EL CLEINTE QUE TENGAMOS MARCADO EN EL TABLE CONTENT
+        //SI LA FILA SELECCIONADA NO ESTA VACIA, TIENE QUE HABER AL MENOS UN REGISTRO > 0
+        if(tableContent.getRowCount() > 0){
+            //TIENE QUE HABER AL MENOS UNA FILA SELECCIONADA
+            if(tableContent.getSelectedRow() !=-1){
+                //OBTENGO EL ID DE LA MASCOTA A EDITAR
+                int idCliente = Integer.parseInt(String.valueOf(tableContent.getValueAt(tableContent.getSelectedRow(), 0)));
+                
+                //LLAMO A UNA INSTANCIA DE LA PANTALLA EDITAR CLIENTE PASANDOLE EL ID CLIENTE SELECCIONADO
+                EditClient editar = new EditClient(idCliente);
+                editar.setVisible(true);
+                editar.setLocationRelativeTo(null);
+                //CUANDO LLAMO A LA PANTALLA EDITAR, HAGO QUE LA VENTANA VER CLIENTES SE CIERREA
+                this.dispose();
+                
+                
+            }else{
+                notificacion("NO SELECT ANY CLIENT", "ERROR", "404 BAD REQUEST");
+            }
+        }else{
+            notificacion("NO ANY CLIENT IN DATE BASE", "ERROR", "404 BAD REQUEST");
+        }
+    }//GEN-LAST:event_btnEditClientActionPerformed
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDeleteClient;
     private javax.swing.JButton btnEditClient;
+    private javax.swing.JButton btnReturn;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -230,4 +308,19 @@ public class ViewClients extends javax.swing.JFrame {
         
 
     }
+    
+    
+    //MENSAJE DE NOTIFICACION
+    public void notificacion(String mensaje, String tipoMensaje, String titulo){
+        JOptionPane optionPane = new JOptionPane(mensaje);
+        if(tipoMensaje.equalsIgnoreCase("INFO")){
+            optionPane.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+        }else if(tipoMensaje.equalsIgnoreCase("ERROR")){
+            optionPane.setMessageType(JOptionPane.ERROR_MESSAGE);
+        }
+        JDialog dialog = optionPane.createDialog(titulo);
+        dialog.setAlwaysOnTop(true);
+        dialog.setVisible(true);
+    }
+    
 }
